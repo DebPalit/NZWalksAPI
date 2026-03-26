@@ -42,6 +42,13 @@ namespace NZWalksAPI
 
             app.MapControllers();
 
+            //debugging routes - claude ai
+            //app.MapGet("/debug/routes", (IEnumerable<EndpointDataSource> endpointSources) =>
+            //string.Join("\n", endpointSources
+            //.SelectMany(s => s.Endpoints)
+            //.OfType<RouteEndpoint>()
+            //.Select(e => $"{e.RoutePattern.RawText} | {e.DisplayName}")));
+
             app.Run();
         }
     }
