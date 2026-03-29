@@ -26,6 +26,8 @@ namespace NZWalksAPI
 
             //injecting region repository
             builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
+            //injecting walk repository
+            builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
 
             var app = builder.Build();
 
