@@ -13,9 +13,42 @@ namespace NZWalksAPI.Repositories
             _dbcontext = dbcontext;
         }
 
-        public async Task<IEnumerable<Walk>> GetAllAsync()
+        public async Task<IEnumerable<Walk>> GetAllAsync(string? filterOn = null, string? filterQuery = null,
+            string? sortBy = null, bool isAsc = true, int pageNumber = 1, int pageSize = 1000)
         {
-            return await _dbcontext.Walks.Include("Region").Include("Difficulty").ToListAsync();
+            var walks = _dbcontext.Walks.Include("Region").Include("Difficulty").AsQueryable();
+
+            // Filtering
+            if (string.IsNullOrWhiteSpace(filterOn) == false && string.IsNullOrWhiteSpace(filterQuery) == false)
+            {
+                if (filterOn.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    walks = walks.Where(x => x.Name.Contains(filterQuery));
+                }
+                if (filterOn.Equals("Description", StringComparison.OrdinalIgnoreCase))
+                {
+                    walks = walks.Where(x => x.Name.Contains(filterQuery));
+                }
+            }
+
+            // Sorting 
+            if (string.IsNullOrWhiteSpace(sortBy) == false)
+            {
+                if (sortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    walks = isAsc ? walks.OrderBy(x => x.Name) : walks.OrderByDescending(x => x.Name);
+                }
+                else if (sortBy.Equals("Length", StringComparison.OrdinalIgnoreCase))
+                {
+                    walks = isAsc ? walks.OrderBy(x => x.LengthInKm) : walks.OrderByDescending(x => x.LengthInKm);
+                }
+            }
+
+            //Pagination
+            int skipResults = (pageNumber - 1) * pageSize;
+
+            return await walks.Skip(skipResults).Take(pageSize).ToListAsync();
+            //return await _dbcontext.Walks.Include("Region").Include("Difficulty").ToListAsync();
         }
 
         public async Task<Walk?> GetByIdAsync(Guid id)
