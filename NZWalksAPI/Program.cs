@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using NZWalksAPI.Data;
 using NZWalksAPI.Mappings;
 using NZWalksAPI.Repositories;
+using NZWalksAPI.Services;
 using System.Text;
 
 namespace NZWalksAPI
@@ -38,6 +39,8 @@ namespace NZWalksAPI
             builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
             //injecting token repository
             builder.Services.AddScoped<ITokenRepository, TokenRepository>();
+            //injecting AuthService
+            builder.Services.AddScoped<IAuthSercive, AuthService>();
 
             // Add Identity
             builder.Services.AddIdentityCore<IdentityUser>()
