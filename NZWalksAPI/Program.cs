@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using NZWalksAPI.Data;
@@ -20,6 +21,7 @@ namespace NZWalksAPI
             // Add services to the container.
 
             builder.Services.AddControllers();
+            builder.Services.AddHttpContextAccessor();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
@@ -37,7 +39,7 @@ namespace NZWalksAPI
             builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
             //injecting walk repository
             builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
-            //injecting image repository
+            //injecting image repository and image service
             builder.Services.AddScoped<IImageRepository, ImageRepository>();
             builder.Services.AddScoped<IImageService, ImageService>();
             //injecting token repository
@@ -91,6 +93,13 @@ namespace NZWalksAPI
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+                RequestPath = "/Images"
+            });
 
 
             app.MapControllers();
