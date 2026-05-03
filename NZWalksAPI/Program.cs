@@ -37,6 +37,9 @@ namespace NZWalksAPI
             builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
             //injecting walk repository
             builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
+            //injecting image repository
+            builder.Services.AddScoped<IImageRepository, ImageRepository>();
+            builder.Services.AddScoped<IImageService, ImageService>();
             //injecting token repository
             builder.Services.AddScoped<ITokenRepository, TokenRepository>();
             //injecting AuthService
